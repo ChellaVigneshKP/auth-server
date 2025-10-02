@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
     <style>
         /* General Reset */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,49 +17,57 @@
             align-items: center;
         }
 
-        .login-card {
+        .register-card {
             background: #fff;
             padding: 40px 30px;
             border-radius: 12px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             text-align: center;
         }
 
-        .login-card h2 {
+        .register-card h2 {
             margin-bottom: 25px;
             color: #333;
             font-size: 28px;
         }
 
-        .login-card form {
+        .register-card form {
             display: flex;
             flex-direction: column;
+            text-align: left;
         }
 
-        .login-card label {
+        .register-card label {
             margin-bottom: 5px;
             font-weight: 600;
-            text-align: left;
             color: #555;
         }
 
-        .login-card input {
+        .register-card input {
             padding: 12px 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 16px;
             transition: border 0.3s;
         }
 
-        .login-card input:focus {
+        .register-card input:focus {
             border-color: #4A90E2;
             outline: none;
         }
 
-        .login-card button {
+        .register-card small {
+            font-size: 12px;
+            color: #888;
+            display: block;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        .register-card button {
             background: #4A90E2;
             color: #fff;
             padding: 12px;
@@ -69,66 +78,70 @@
             transition: background 0.3s;
         }
 
-        .login-card button:hover {
+        .register-card button:hover {
             background: #357ABD;
         }
 
-        .login-card p {
+        .register-card p {
             margin-top: 15px;
             font-size: 14px;
+            text-align: center;
         }
 
-        .login-card a {
+        .register-card a {
             color: #4A90E2;
             text-decoration: none;
             font-weight: 600;
         }
 
-        .login-card a:hover {
+        .register-card a:hover {
             text-decoration: underline;
         }
 
-        .login-card .alert {
+        .register-card .alert {
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 8px;
             font-size: 14px;
         }
 
-        .login-card .alert-error {
+        .register-card .alert-error {
             background-color: #FDECEA;
             color: #D93025;
         }
 
-        .login-card .alert-success {
+        .register-card .alert-success {
             background-color: #E6F4EA;
             color: #188038;
         }
     </style>
 </head>
 <body>
-<div class="login-card">
-    <h2>Welcome Back</h2>
+<div class="register-card">
+    <h2>Create Account</h2>
 
-    <form th:action="@{/login}" method="post">
+    <form th:action="@{/register}" method="post" th:object="${user}">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter your username" required />
+        <input type="text" id="username" th:field="*{username}" placeholder="Enter your username" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" th:field="*{email}" placeholder="Enter your email" required />
 
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+        <input type="password" id="password" th:field="*{password}" placeholder="Enter a strong password" required />
+        <small>Password must be at least 8 characters with letters and numbers.</small>
 
-        <div th:if="${param.error}" class="alert alert-error">
-            Invalid username or password.
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Re-enter your password" required />
+
+        <div th:if="${error != null}" class="alert alert-error">
+            <p th:text="${error}"></p>
         </div>
 
-        <div th:if="${param.logout}" class="alert alert-success">
-            You have been logged out successfully.
-        </div>
-
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
     </form>
 
-    <p>Don't have an account? <a th:href="@{/register}">Register</a></p>
+    <p>Already have an account? <a th:href="@{/login}">Login</a></p>
 </div>
 </body>
 </html>
