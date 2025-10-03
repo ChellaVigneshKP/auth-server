@@ -1,146 +1,115 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
-    <style>
-        /* General Reset */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - C-Cloud</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #4A90E2, #50E3C2);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 
-        .register-card {
-            background: #fff;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 450px;
-            text-align: center;
-        }
-
-        .register-card h2 {
-            margin-bottom: 25px;
-            color: #333;
-            font-size: 28px;
-        }
-
-        .register-card form {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .register-card label {
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .register-card input {
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-
-        .register-card input:focus {
-            border-color: #4A90E2;
-            outline: none;
-        }
-
-        .register-card small {
-            font-size: 12px;
-            color: #888;
-            display: block;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
-
-        .register-card button {
-            background: #4A90E2;
-            color: #fff;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .register-card button:hover {
-            background: #357ABD;
-        }
-
-        .register-card p {
-            margin-top: 15px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .register-card a {
-            color: #4A90E2;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .register-card a:hover {
-            text-decoration: underline;
-        }
-
-        .register-card .alert {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .register-card .alert-error {
-            background-color: #FDECEA;
-            color: #D93025;
-        }
-
-        .register-card .alert-success {
-            background-color: #E6F4EA;
-            color: #188038;
-        }
-    </style>
+    <!-- Your Theme Styles -->
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
 </head>
-<body>
-<div class="register-card">
-    <h2>Create Account</h2>
+<body class="flex flex-col min-h-screen bg-gray-100 text-gray-900">
 
-    <form th:action="@{/register}" method="post" th:object="${user}">
-        <label for="username">Username</label>
-        <input type="text" id="username" th:field="*{username}" placeholder="Enter your username" required />
-
-        <label for="email">Email</label>
-        <input type="email" id="email" th:field="*{email}" placeholder="Enter your email" required />
-
-        <label for="password">Password</label>
-        <input type="password" id="password" th:field="*{password}" placeholder="Enter a strong password" required />
-        <small>Password must be at least 8 characters with letters and numbers.</small>
-
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Re-enter your password" required />
-
-        <div th:if="${error != null}" class="alert alert-error">
-            <p th:text="${error}"></p>
+<!-- Main Content Area -->
+<div class="flex-grow flex items-center justify-center p-4">
+    <!-- Card -->
+    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <!-- Logo -->
+        <div class="flex flex-col items-center mb-6">
+            <img th:src="@{/images/logo.png}" alt="C-Cloud Logo" class="h-10 w-10 object-contain">
+            <span class="mt-2 text-lg font-semibold">C-Cloud</span>
         </div>
 
-        <button type="submit">Register</button>
-    </form>
+        <!-- Heading -->
+        <h2 class="text-2xl font-bold text-center mb-6">Create an account</h2>
 
-    <p>Already have an account? <a th:href="@{/login}">Login</a></p>
+        <!-- Dynamic Social Login Buttons -->
+        <div th:if="${anySocialLoginEnabled}" class="space-y-3">
+            <!-- Google Login Button -->
+            <a th:if="${socialLoginFlags.google}"
+               href="#"
+               class="w-full flex items-center justify-center gap-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-5 w-5" alt="Google"/>
+                Sign in with Google
+            </a>
+
+            <!-- Apple Login Button -->
+            <a th:if="${socialLoginFlags.apple}"
+               href="#"
+               class="w-full flex items-center justify-center gap-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition">
+                <img src="https://www.svgrepo.com/show/349398/apple.svg" class="h-5 w-5" alt="Apple"/>
+                Sign in with Apple
+            </a>
+
+            <!-- GitHub Login Button -->
+            <a th:if="${socialLoginFlags.github}"
+               href="#"
+               class="w-full flex items-center justify-center gap-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition">
+                <img src="https://www.svgrepo.com/show/512317/github-142.svg" class="h-5 w-5" alt="GitHub"/>
+                Sign in with GitHub
+            </a>
+        </div>
+
+        <!-- Dynamic Divider - Only show if there are social login buttons -->
+        <div th:if="${anySocialLoginEnabled}" class="flex items-center my-6">
+            <div class="flex-grow border-t border-gray-300"></div>
+            <span class="px-3 text-gray-500 text-sm">Or continue with</span>
+            <div class="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        <!-- Error Alert -->
+        <div th:if="${error != null}"
+             class="bg-red-600 text-white text-sm px-4 py-2 rounded mb-4">
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Form -->
+        <form th:action="@{/register}" method="post" th:object="${user}" class="space-y-4">
+            <input type="text" th:field="*{fullName}" placeholder="Name" autocomplete="name"
+                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
+
+            <input type="email" th:field="*{email}" placeholder="Email" autocomplete="email"
+                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
+
+            <input type="password" th:field="*{password}" placeholder="Password" autocomplete="new-password"
+                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
+
+            <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password" autocomplete="new-password"
+                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
+
+            <button type="submit"
+                    class="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition">
+                Create Account
+            </button>
+        </form>
+
+        <!-- Already have an account -->
+        <p class="mt-6 text-center text-gray-600 text-sm">
+            Already have an account?
+            <a th:href="@{/login}" class="text-blue-500 hover:underline">Log in</a>
+        </p>
+    </div>
 </div>
+
+<!-- Footer Note -->
+<div class="py-4 text-center text-gray-500 text-xs w-full">
+    By signing up, you agree to our
+    <a href="#" class="hover:underline">Terms of Service</a> and
+    <a href="#" class="hover:underline">Privacy Policy</a>. <br>
+    © 2025 C-Cloud. All rights reserved.
+</div>
+
+<!-- Theme Switcher -->
+<button onclick="toggleTheme()"
+        class="theme-toggle fixed bottom-4 right-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white w-10 h-10 rounded-md shadow flex items-center justify-center">
+    <span id="theme-icon"></span>
+</button>
+
+<!-- Your Theme Script -->
+<script th:src="@{/js/theme.js}"></script>
 </body>
 </html>

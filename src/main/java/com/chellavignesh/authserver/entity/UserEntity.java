@@ -20,16 +20,16 @@ public class UserEntity {
     private UUID id;
 
     @Column(nullable = false, unique = true)
-    private String username;
-
-    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
-    private String password; // Hashed
+    private String password;
 
     @Column(nullable = false)
     private Boolean enabled = true;
+
+    @Column(nullable = false)
+    private String fullName;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

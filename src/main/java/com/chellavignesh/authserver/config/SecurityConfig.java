@@ -6,12 +6,12 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
@@ -19,66 +19,58 @@ import org.springframework.security.oauth2.server.authorization.JdbcOAuth2Author
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.JwtGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import javax.sql.DataSource;
-import java.time.Duration;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http,
-                                                                      JWKSource<SecurityContext> jwkSource,
-                                                                      OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer) throws Exception {
-
-        // Apply default Authorization Server security
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-
-        // Enable OpenID Connect 1.0
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
+            throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
-                http.getConfigurer(OAuth2AuthorizationServerConfigurer.class);
-        authorizationServerConfigurer
-                .oidc(Customizer.withDefaults())
-                .authorizationEndpoint(endpoint -> endpoint.consentPage("/oauth2/consent"));
+                OAuth2AuthorizationServerConfigurer.authorizationServer();
 
-        // Exception handling
-        http.exceptionHandling(ex -> ex.authenticationEntryPoint(
-                new LoginUrlAuthenticationEntryPoint("/login")
-        ));
-
-        // JWT resource server support (optional)
-        http.oauth2ResourceServer(rs -> rs.jwt(Customizer.withDefaults()));
-
-        // Security headers
-        http.headers(headers -> headers
-                .httpStrictTransportSecurity(hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(Duration.ofDays(365).getSeconds()))
-                .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"))
-                .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-        );
-
-        http.cors(Customizer.withDefaults());
+        http
+                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
+                .with(authorizationServerConfigurer, authorizationServer ->
+                        authorizationServer
+                                .oidc(Customizer.withDefaults())    // Enable OpenID Connect 1.0
+                )
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .anyRequest().authenticated()
+                )
+                // Redirect to the login page when not authenticated from the
+                // authorization endpoint
+                .exceptionHandling(exceptions -> exceptions
+                        .defaultAuthenticationEntryPointFor(
+                                new LoginUrlAuthenticationEntryPoint("/login"),
+                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+                        )
+                );
 
         return http.build();
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http,
-                                                          CustomUserDetailsService userDetailsService,
-                                                          PasswordEncoder passwordEncoder) throws Exception {
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 
         http.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health", "/actuator/info", "/static/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/login", "/error", "/register", "/oauth2/consent", "/admin/**").permitAll()
+                        .requestMatchers("/login", "/error", "/register", "/oauth2/consent").permitAll()
+                        .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

@@ -83,6 +83,11 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+			<groupId>io.getunleash</groupId>
+			<artifactId>unleash-client-java</artifactId>
+			<version>LATEST</version>
+		</dependency>
     </dependencies>
 
 	<build>

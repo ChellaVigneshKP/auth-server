@@ -1,0 +1,129 @@
+/* Theme toggle styling */
+.theme-toggle {
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+/* Tailwind v4 dark mode custom properties */
+:root {
+    --color-gray-100: #f7fafc;
+    --color-gray-200: #edf2f7;
+    --color-gray-300: #e2e8f0;
+    --color-gray-400: #cbd5e0;
+    --color-gray-500: #a0aec0;
+    --color-gray-600: #718096;
+    --color-gray-700: #4a5568;
+    --color-gray-800: #2d3748;
+    --color-gray-900: #1a202c;
+    --color-blue-500: #4299e1;
+    --color-blue-600: #3182ce;
+    --color-blue-700: #2b6cb0;
+    --color-red-600: #e53e3e;
+    --color-white: #ffffff;
+}
+
+.dark {
+    --color-gray-100: #1a202c;
+    --color-gray-200: #2d3748;
+    --color-gray-300: #4a5568;
+    --color-gray-400: #718096;
+    --color-gray-500: #a0aec0;
+    --color-gray-600: #cbd5e0;
+    --color-gray-700: #e2e8f0;
+    --color-gray-800: #edf2f7;
+    --color-gray-900: #f7fafc;
+    --color-blue-500: #63b3ed;
+    --color-blue-600: #4299e1;
+    --color-blue-700: #3182ce;
+    --color-red-600: #fc8181;
+    --color-white: #1a202c;
+}
+
+/* Apply the custom properties */
+.bg-gray-100 {
+    background-color: var(--color-gray-100);
+}
+
+.bg-gray-200 {
+    background-color: var(--color-gray-200);
+}
+
+.bg-gray-300 {
+    background-color: var(--color-gray-300);
+}
+
+.bg-gray-700 {
+    background-color: var(--color-gray-700);
+}
+
+.bg-gray-800 {
+    background-color: var(--color-gray-800);
+}
+
+.bg-gray-900 {
+    background-color: var(--color-gray-900);
+}
+
+.bg-white {
+    background-color: var(--color-white);
+}
+
+.bg-blue-600 {
+    background-color: var(--color-blue-600);
+}
+
+.bg-blue-700 {
+    background-color: var(--color-blue-700);
+}
+
+.bg-red-600 {
+    background-color: var(--color-red-600);
+}
+
+.text-gray-400 {
+    color: var(--color-gray-400);
+}
+
+.text-gray-500 {
+    color: var(--color-gray-500);
+}
+
+.text-gray-600 {
+    color: var(--color-gray-600);
+}
+
+.text-gray-800 {
+    color: var(--color-gray-800);
+}
+
+.text-gray-900 {
+    color: var(--color-gray-900);
+}
+
+.text-white {
+    color: var(--color-white);
+}
+
+.border-gray-300 {
+    border-color: var(--color-gray-300);
+}
+
+.border-gray-600 {
+    border-color: var(--color-gray-600);
+}
+
+.hover\:bg-gray-300:hover {
+    background-color: var(--color-gray-300);
+}
+
+.hover\:bg-gray-600:hover {
+    background-color: var(--color-gray-600);
+}
+
+.hover\:bg-blue-700:hover {
+    background-color: var(--color-blue-700);
+}
