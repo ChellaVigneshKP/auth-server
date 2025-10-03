@@ -81,6 +81,8 @@
             <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password" autocomplete="new-password"
                    class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
 
+            <input type="hidden" id="fingerprint" name="fingerprint" th:field="*{fingerprint}" />
+
             <button type="submit"
                     class="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition">
                 Create Account
@@ -108,6 +110,17 @@
         class="theme-toggle fixed bottom-4 right-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white w-10 h-10 rounded-md shadow flex items-center justify-center">
     <span id="theme-icon"></span>
 </button>
+
+<script src="/js/fingerprint.min.js"></script>
+<script>
+    const fpPromise = FingerprintJS.load();
+    fpPromise
+        .then(fp => fp.get())
+        .then(result => {
+            document.getElementById("fingerprint").value = result.visitorId;
+        })
+        .catch(() => {});
+</script>
 
 <!-- Your Theme Script -->
 <script th:src="@{/js/theme.js}"></script>
