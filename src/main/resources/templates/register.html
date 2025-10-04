@@ -118,6 +118,7 @@
             <!-- Form -->
             <form th:action="@{/register}" method="post" th:object="${user}" class="space-y-5">
                 <div class="form-group">
+                    <label for="name-input" class="sr-only">Full Name</label>
                     <input type="text" th:field="*{fullName}" placeholder="Name" autocomplete="name"
                            class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                            id="name-input"/>
@@ -133,6 +134,7 @@
 
                 <!-- Email input (always rendered) -->
                 <div class="form-group" id="email-input-container">
+                    <label for="email-input" class="sr-only">Email Address</label>
                     <input type="email" th:field="*{email}" id="email-input"
                            placeholder="you@example.com" autocomplete="email"
                            class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300
@@ -143,6 +145,7 @@
 
                 <!-- Phone input (hidden initially, only if phone signup is enabled) -->
                 <div class="form-group hidden" id="phone-input-container" th:if="${enablePhoneSignup}">
+                    <label for="phone-input" class="sr-only">Phone Number</label>
                     <input type="tel" th:field="*{phone}" id="phone-input"
                            placeholder="Phone number" autocomplete="tel"
                            class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300
@@ -157,6 +160,7 @@
 
                 <div class="form-group">
                     <div class="flex items-center w-full border border-gray-300 rounded-xl px-4 py-3.5 bg-white dark:bg-gray-800 dark:border-gray-600">
+                        <label for="password-input" class="sr-only">Password</label>
                         <input type="password" th:field="*{password}" id="password-input"
                                placeholder="Password" autocomplete="new-password"
                                class="flex-1 border-none text-base text-gray-900 placeholder-gray-500 focus:outline-none dark:text-white dark:placeholder-gray-400"/>
@@ -179,6 +183,7 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="confirm-password-input" class="sr-only">Confirm Password</label>
                     <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password"
                            autocomplete="new-password"
                            class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
