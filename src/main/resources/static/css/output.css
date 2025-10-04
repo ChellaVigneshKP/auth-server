@@ -12,7 +12,6 @@
     --color-red-600: #dc2626;
     --color-red-800: #991b1b;
     --color-red-900: #7f1d1d;
-    --color-yellow-400: oklch(85.2% 0.199 91.936);
     --color-cyan-400: oklch(78.9% 0.154 211.53);
     --color-blue-50: #eff6ff;
     --color-blue-300: #93c5fd;
@@ -207,8 +206,16 @@
   }
 }
 @layer utilities {
-  .pointer-events-none {
-    pointer-events: none;
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
   }
   .absolute {
     position: absolute;
@@ -661,9 +668,6 @@
     &::placeholder {
       color: var(--color-gray-500);
     }
-  }
-  .opacity-0 {
-    opacity: 0%;
   }
   .opacity-70 {
     opacity: 70%;
@@ -1138,6 +1142,24 @@
 }
 .iti {
   width: 100% !important;
+}
+.dark .iti__country-list, .dark .iti__country {
+  background-color: #1f2937;
+  color: #f9fafb;
+}
+.dark .iti__country:hover, .dark .iti__country.iti__highlight {
+  background-color: #374151;
+}
+.dark .iti .iti__selected-dial-code {
+  color: #f3f4f6;
+}
+.dark .iti__search-input {
+  background-color: #374151;
+  color: #f9fafb;
+  border-color: #4b5563;
+}
+.dark .iti__search-clear {
+  color: #f9fafb;
 }
 @property --tw-rotate-x {
   syntax: "*";
