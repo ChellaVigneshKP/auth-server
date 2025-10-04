@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +82,7 @@ public class UserController {
                 .email(user.getEmail().toLowerCase().trim())
                 .password(passwordEncoder.encode(user.getPassword()))
                 .enabled(true)
-                .createdAt(LocalDateTime.now())
+                .createdAt(OffsetDateTime.now()) // timezone-aware timestamp
                 .build();
 
         userRepository.save(entity);
