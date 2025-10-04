@@ -4,125 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - C-Cloud</title>
-
-    <!-- Tailwind CSS -->
-    <link rel="stylesheet" th:href="@{/css/output.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-
-    <!-- Your Theme Styles -->
-    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
-<body class="flex flex-col min-h-screen bg-gray-100 text-gray-900">
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen flex flex-col overflow-x-hidden transition-colors duration-300 dark:from-gray-900 dark:to-blue-900">
+<!-- Background Animation -->
+<div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="floating-shape absolute w-72 h-72 -top-24 -left-24 rounded-full bg-blue-500/10 dark:bg-blue-500/30 animate-float"></div>
+    <div class="floating-shape absolute w-48 h-48 top-2/5 -right-12 rounded-full bg-purple-500/10 dark:bg-purple-500/30 animate-float animation-delay-2000"></div>
+    <div class="floating-shape absolute w-36 h-36 -bottom-12 left-1/3 rounded-full bg-cyan-400/10 dark:bg-cyan-400/30 animate-float animation-delay-4000"></div>
+</div>
 
-<!-- Main Content Area -->
-<div class="flex-grow flex items-center justify-center p-4">
-    <!-- Card -->
-    <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-        <!-- Logo -->
-        <div class="flex flex-col items-center mb-6">
-            <img th:src="@{/images/logo.png}" alt="C-Cloud Logo" class="h-10 w-10 object-contain">
-            <span class="mt-2 text-lg font-semibold">C-Cloud</span>
+<div class="container max-w-6xl mx-auto px-5 w-full">
+    <!-- Header -->
+    <header class="flex justify-between items-center py-5">
+        <div class="logo flex items-center gap-3 font-bold text-2xl text-blue-800 dark:text-white">
+            <div class="logo-icon w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-800 rounded-xl flex items-center justify-center text-white">
+                <i class="fas fa-cloud"></i>
+            </div>
+            <span>C-Cloud</span>
         </div>
 
-        <!-- Heading -->
-        <h2 class="text-2xl font-bold text-center mb-6">Create an account</h2>
-
-        <!-- Dynamic Social Login Buttons -->
-        <div th:if="${anySocialLoginEnabled}" class="space-y-3">
-            <!-- Google Login Button -->
-            <a th:if="${socialLoginFlags.google}"
-               href="#"
-               class="w-full flex items-center justify-center gap-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-5 w-5" alt="Google"/>
-                Sign in with Google
-            </a>
-
-            <!-- Apple Login Button -->
-            <a th:if="${socialLoginFlags.apple}"
-               href="#"
-               class="w-full flex items-center justify-center gap-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition">
-                <img src="https://www.svgrepo.com/show/349398/apple.svg" class="h-5 w-5" alt="Apple"/>
-                Sign in with Apple
-            </a>
-
-            <!-- GitHub Login Button -->
-            <a th:if="${socialLoginFlags.github}"
-               href="#"
-               class="w-full flex items-center justify-center gap-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition">
-                <img src="https://www.svgrepo.com/show/512317/github-142.svg" class="h-5 w-5" alt="GitHub"/>
-                Sign in with GitHub
-            </a>
+        <div class="header-actions flex items-center gap-4">
+            <div class="language-selector relative">
+                <button class="language-button bg-white border border-gray-300 rounded-xl px-4 py-2.5 text-gray-900 text-sm font-medium cursor-pointer transition-all duration-300 flex items-center gap-2 min-w-[130px] justify-between hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/15 hover:-translate-y-0.5 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                        id="language-button">
+                    <i class="fas fa-globe language-icon"></i>
+                    <span class="language-text flex-1 text-left" id="current-language">English</span>
+                    <i class="fas fa-chevron-down chevron text-xs opacity-70"></i>
+                </button>
+                <div class="language-dropdown absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded-xl shadow-xl min-w-[160px] z-50 opacity-0 pointer-events-none transition-all duration-300 dark:bg-gray-800 dark:border-gray-600 dark:shadow-2xl"
+                     id="language-dropdown">
+                    <!-- Language options -->
+                    <div class="language-option active px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-blue-900/20"
+                         data-lang="en">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">English</span>
+                    </div>
+                    <div class="language-option px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-blue-900/20"
+                         data-lang="es">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">Español</span>
+                    </div>
+                    <div class="language-option px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-blue-900/20"
+                         data-lang="fr">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">Français</span>
+                    </div>
+                    <div class="language-option px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-blue-900/20"
+                         data-lang="de">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">Deutsch</span>
+                    </div>
+                    <div class="language-option px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-blue-900/20"
+                         data-lang="zh">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">中文</span>
+                    </div>
+                    <div class="language-option px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-blue-900/20"
+                         data-lang="ja">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">日本語</span>
+                    </div>
+                    <div class="language-option px-4 py-3 cursor-pointer transition-colors duration-200 border-b border-gray-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:border-gray-600 dark:hover:bg-blue-900/20"
+                         data-lang="hi">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">हिन्दी</span>
+                    </div>
+                    <div class="language-option px-4 py-3 cursor-pointer transition-colors duration-200 flex items-center gap-2.5 hover:bg-blue-50 text-gray-900 dark:text-white dark:hover:bg-blue-900/20"
+                         data-lang="ta">
+                        <i class="fas fa-language language-icon text-blue-500 w-5 text-center"></i>
+                        <span class="language-text flex-1">தமிழ்</span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </header>
 
-        <!-- Dynamic Divider - Only show if there are social login buttons -->
-        <div th:if="${anySocialLoginEnabled}" class="flex items-center my-6">
-            <div class="flex-grow border-t border-gray-300"></div>
-            <span class="px-3 text-gray-500 text-sm">Or continue with</span>
-            <div class="flex-grow border-t border-gray-300"></div>
+    <!-- Main Content -->
+    <div class="main-content flex items-center justify-center flex-grow py-10">
+        <div class="card bg-white rounded-2xl shadow-lg p-10 w-full max-w-md border border-gray-200 transition-all duration-300 hover:shadow-xl dark:bg-gray-800 dark:border-gray-600 dark:shadow-2xl dark:hover:shadow-3xl">
+            <div class="card-header text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2 dark:text-white" id="page-title">Create Account</h1>
+                <p class="text-gray-600 text-base dark:text-gray-400" id="page-subtitle">Join C-Cloud to store and access your files anywhere</p>
+            </div>
+
+            <!-- Error Alert -->
+            <div th:if="${error != null}" class="error-message bg-red-50 text-red-600 border border-red-200 rounded-lg px-4 py-3 mb-5 flex items-center gap-2.5 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800">
+                <i class="fas fa-exclamation-circle"></i>
+                <span th:text="${error}"></span>
+            </div>
+
+            <!-- Form -->
+            <form th:action="@{/register}" method="post" th:object="${user}" class="space-y-5">
+                <div class="form-group">
+                    <input type="text" th:field="*{fullName}" placeholder="Name" autocomplete="name"
+                           class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                           id="name-input"/>
+                </div>
+
+                <div class="form-group">
+                    <input type="email" th:field="*{email}" placeholder="Email" autocomplete="email"
+                           class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                           id="email-input"/>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" th:field="*{password}" placeholder="Password" autocomplete="new-password"
+                           class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                           id="password-input"/>
+                    <div class="password-strength h-1 bg-gray-200 rounded-full mt-2 overflow-hidden dark:bg-gray-700">
+                        <div class="password-strength-bar h-full rounded-full transition-all duration-300" id="password-strength-bar"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password"
+                           autocomplete="new-password"
+                           class="w-full px-4 py-3.5 border border-gray-300 rounded-xl text-base transition-all duration-300 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+                           id="confirm-password-input"/>
+                </div>
+
+                <input type="hidden" id="fingerprint" name="fingerprint" th:field="*{fingerprint}"/>
+
+                <button type="submit" class="btn-primary w-full py-3.5 bg-gradient-to-br from-blue-500 to-blue-800 text-white rounded-xl font-semibold text-base cursor-pointer transition-all duration-300 mt-2.5 hover:from-blue-600 hover:to-blue-900 hover:shadow-lg hover:shadow-blue-500/40"
+                        id="submit-button">
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Dynamic Social Login Buttons -->
+            <div th:if="${anySocialLoginEnabled}">
+                <div class="divider flex items-center my-6 text-gray-600 dark:text-gray-400">
+                    <div class="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+                    <span class="px-4 text-sm" id="divider-text">Or sign up with</span>
+                    <div class="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+                </div>
+
+                <div class="social-buttons grid grid-cols-3 gap-3 mb-6">
+                    <!-- Google Login Button -->
+                    <a th:if="${socialLoginFlags.google}" href="#"
+                       class="social-btn flex items-center justify-center p-3 border border-gray-300 rounded-xl bg-white cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="social-icon w-5 h-5"
+                             alt="Google"/>
+                    </a>
+
+                    <!-- Apple Login Button -->
+                    <a th:if="${socialLoginFlags.apple}" href="#"
+                       class="social-btn flex items-center justify-center p-3 border border-gray-300 rounded-xl bg-white cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700">
+                        <img src="https://www.svgrepo.com/show/349398/apple.svg" class="social-icon w-5 h-5" alt="Apple"/>
+                    </a>
+
+                    <!-- GitHub Login Button -->
+                    <a th:if="${socialLoginFlags.github}" href="#"
+                       class="social-btn flex items-center justify-center p-3 border border-gray-300 rounded-xl bg-white cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700">
+                        <img src="https://www.svgrepo.com/show/512317/github-142.svg" class="social-icon w-5 h-5" alt="GitHub"/>
+                    </a>
+                </div>
+            </div>
+
+            <div class="login-link text-center mt-6 text-gray-600 dark:text-gray-400">
+                <span id="login-prompt">Already have an account?</span>
+                <a th:href="@{/login}" class="text-blue-500 hover:underline font-medium ml-1" id="login-link">Log in</a>
+            </div>
         </div>
-
-        <!-- Error Alert -->
-        <div th:if="${error != null}"
-             class="bg-red-600 text-white text-sm px-4 py-2 rounded mb-4">
-            <span th:text="${error}"></span>
-        </div>
-
-        <!-- Form -->
-        <form th:action="@{/register}" method="post" th:object="${user}" class="space-y-4">
-            <input type="text" th:field="*{fullName}" placeholder="Name" autocomplete="name"
-                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
-
-            <input type="email" th:field="*{email}" placeholder="Email" autocomplete="email"
-                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
-
-            <input type="password" th:field="*{password}" placeholder="Password" autocomplete="new-password"
-                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
-
-            <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password" autocomplete="new-password"
-                   class="w-full px-4 py-3 rounded-md bg-gray-100 border border-gray-300 text-gray-900 focus:ring-2 focus:ring-blue-500 outline-none"/>
-
-            <input type="hidden" id="fingerprint" name="fingerprint" th:field="*{fingerprint}" />
-
-            <button type="submit"
-                    class="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition">
-                Create Account
-            </button>
-        </form>
-
-        <!-- Already have an account -->
-        <p class="mt-6 text-center text-gray-600 text-sm">
-            Already have an account?
-            <a th:href="@{/login}" class="text-blue-500 hover:underline">Log in</a>
-        </p>
     </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-600 text-sm border-t border-gray-200 mt-10 dark:text-gray-400 dark:border-gray-600">
+        <p id="footer-text">By signing up, you agree to our <a href="#" class="text-blue-500 hover:underline">Terms of Service</a> and
+            <a href="#" class="text-blue-500 hover:underline">Privacy Policy</a>.</p>
+        <div class="footer-links flex justify-center gap-5 mt-2.5">
+            <a href="#" class="text-gray-600 hover:text-blue-500 hover:underline dark:text-gray-400" id="help-link">Help Center</a>
+            <a href="#" class="text-gray-600 hover:text-blue-500 hover:underline dark:text-gray-400" id="status-link">Status</a>
+            <a href="#" class="text-gray-600 hover:text-blue-500 hover:underline dark:text-gray-400" id="blog-link">Blog</a>
+        </div>
+        <p class="mt-4">© 2025 C-Cloud. All rights reserved.</p>
+    </footer>
 </div>
 
-<!-- Footer Note -->
-<div class="py-4 text-center text-gray-500 text-xs w-full">
-    By signing up, you agree to our
-    <a href="#" class="hover:underline">Terms of Service</a> and
-    <a href="#" class="hover:underline">Privacy Policy</a>. <br>
-    © 2025 C-Cloud. All rights reserved.
-</div>
-
-<!-- Theme Switcher -->
-<button onclick="toggleTheme()"
-        class="theme-toggle fixed bottom-4 right-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white w-10 h-10 rounded-md shadow flex items-center justify-center">
-    <span id="theme-icon"></span>
+<!-- Theme Toggle -->
+<button class="theme-toggle fixed bottom-8 right-8 w-12 h-12 rounded-full bg-white text-gray-600 shadow-lg flex items-center justify-center cursor-pointer border-none text-lg transition-all duration-300 hover:rotate-12 hover:shadow-xl dark:bg-gray-800 dark:text-white dark:shadow-2xl z-50">
+    <i class="fas fa-palette"></i>
 </button>
 
 <script src="/js/fingerprint.min.js"></script>
-<script>
-    const fpPromise = FingerprintJS.load();
-    fpPromise
-        .then(fp => fp.get())
-        .then(result => {
-            document.getElementById("fingerprint").value = result.visitorId;
-        })
-        .catch(() => {});
-</script>
-
-<!-- Your Theme Script -->
 <script th:src="@{/js/theme.js}"></script>
+<script th:src="@{/js/register.js}"></script>
 </body>
 </html>

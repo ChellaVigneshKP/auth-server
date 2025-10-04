@@ -1,32 +1,58 @@
-(function() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
+class ThemeManager {
+    constructor() {
+        this.currentTheme = localStorage.getItem('theme') || 'light';
+        this.init();
     }
-})();
 
-function toggleTheme() {
-    const html = document.documentElement;
-    const themeIcon = document.getElementById('theme-icon');
-    const icon = themeIcon.querySelector('i');
+    init() {
+        this.applyTheme(this.currentTheme);
+        this.bindEvents();
+    }
 
-    if (html.classList.contains('dark')) {
-        html.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        icon.className = 'fas fa-sun';
-    } else {
-        html.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        icon.className = 'fas fa-moon';
+    applyTheme(theme) {
+        const html = document.documentElement;
+
+        if (theme === 'dark') {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+
+        localStorage.setItem('theme', theme);
+        this.currentTheme = theme;
+
+        // Update the theme icon
+        this.updateThemeIcon();
+    }
+
+    toggleTheme() {
+        const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+        this.applyTheme(newTheme);
+    }
+
+    updateThemeIcon() {
+        const themeIcon = document.querySelector('.theme-toggle i');
+        if (themeIcon) {
+            if (this.currentTheme === 'dark') {
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+            }
+        }
+    }
+
+    bindEvents() {
+        const themeToggle = document.querySelector('.theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.toggleTheme();
+            });
+        }
     }
 }
 
+// Initialize theme when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    const themeIcon = document.getElementById('theme-icon');
-    if (themeIcon) {
-        const isDark = document.documentElement.classList.contains('dark');
-        themeIcon.innerHTML = isDark ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
-    }
+    new ThemeManager();
 });
