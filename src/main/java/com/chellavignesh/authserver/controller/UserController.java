@@ -44,6 +44,7 @@ public class UserController {
         socialLoginFlags.put("github", unleash.isEnabled("enable-github-login"));
 
         model.addAttribute("socialLoginFlags", socialLoginFlags);
+        model.addAttribute("enablePhoneSignup", unleash.isEnabled("enable-phone-signup"));
         model.addAttribute("anySocialLoginEnabled",
                 socialLoginFlags.values().stream().anyMatch(Boolean::booleanValue));
 
@@ -107,5 +108,7 @@ public class UserController {
         private String confirmPassword;
 
         private String fingerprint;
+
+        private String phone;
     }
 }
