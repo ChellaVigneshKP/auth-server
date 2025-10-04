@@ -142,24 +142,23 @@
                     <div class="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
                 </div>
 
-                <div class="social-buttons grid grid-cols-3 gap-3 mb-6">
+                <div class="social-buttons flex flex-wrap justify-center gap-3 mb-6">
                     <!-- Google Login Button -->
                     <a th:if="${socialLoginFlags.google}" href="#"
                        class="social-btn flex items-center justify-center p-3 border border-gray-300 rounded-xl bg-white cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="social-icon w-5 h-5"
-                             alt="Google"/>
+                        <i class="fab fa-google text-gray-800 text-lg dark:text-white"></i>
                     </a>
 
                     <!-- Apple Login Button -->
                     <a th:if="${socialLoginFlags.apple}" href="#"
                        class="social-btn flex items-center justify-center p-3 border border-gray-300 rounded-xl bg-white cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700">
-                        <img src="https://www.svgrepo.com/show/349398/apple.svg" class="social-icon w-5 h-5" alt="Apple"/>
+                        <i class="fab fa-apple text-gray-800 text-lg dark:text-white"></i>
                     </a>
 
                     <!-- GitHub Login Button -->
                     <a th:if="${socialLoginFlags.github}" href="#"
                        class="social-btn flex items-center justify-center p-3 border border-gray-300 rounded-xl bg-white cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:-translate-y-0.5 hover:shadow-md dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700">
-                        <img src="https://www.svgrepo.com/show/512317/github-142.svg" class="social-icon w-5 h-5" alt="GitHub"/>
+                        <i class="fab fa-github text-gray-800 text-lg dark:text-white"></i>
                     </a>
                 </div>
             </div>
