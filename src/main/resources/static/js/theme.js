@@ -1,16 +1,38 @@
 class ThemeManager {
     constructor() {
-        this.currentTheme = localStorage.getItem('theme') || 'light';
+        this.theme = window.__initialTheme || this.detectTheme();
         this.init();
     }
 
-    init() {
-        this.applyTheme(this.currentTheme);
-        this.bindEvents();
+    detectTheme() {
+        try {
+            return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        } catch {
+            return 'light';
+        }
     }
 
-    applyTheme(theme) {
+    init() {
+        // Show content now that theme is ready
+        this.showContent();
+        this.updateIcon();
+        this.bindEvents();
+
+        // Listen for system theme changes
+        this.watchSystemTheme();
+    }
+
+    showContent() {
+        document.body.classList.remove('no-theme-flash');
+        document.body.classList.add('theme-loaded');
+    }
+
+    applyTheme(theme, withTransition = true) {
         const html = document.documentElement;
+
+        if (!withTransition) {
+            html.classList.add('no-transition');
+        }
 
         if (theme === 'dark') {
             html.classList.add('dark');
@@ -18,27 +40,34 @@ class ThemeManager {
             html.classList.remove('dark');
         }
 
-        localStorage.setItem('theme', theme);
-        this.currentTheme = theme;
+        // Force reflow
+        void html.offsetWidth;
 
-        // Update the theme icon
-        this.updateThemeIcon();
-    }
-
-    toggleTheme() {
-        const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
-        this.applyTheme(newTheme);
-    }
-
-    updateThemeIcon() {
-        const themeIcon = document.querySelector('.theme-toggle i');
-        if (themeIcon) {
-            if (this.currentTheme === 'dark') {
-                themeIcon.className = 'ti ti-sun';
-            } else {
-                themeIcon.className = 'ti ti-moon';
-            }
+        if (!withTransition) {
+            setTimeout(() => {
+                html.classList.remove('no-transition');
+            }, 10);
         }
+
+        try {
+            localStorage.setItem('theme', theme);
+        } catch (e) {
+        }
+
+        this.theme = theme;
+        this.updateIcon();
+    }
+
+    updateIcon() {
+        const icon = document.querySelector('.theme-toggle i');
+        if (icon) {
+            icon.className = this.theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
+        }
+    }
+
+    toggle() {
+        const newTheme = this.theme === 'light' ? 'dark' : 'light';
+        this.applyTheme(newTheme, true);
     }
 
     bindEvents() {
@@ -46,13 +75,35 @@ class ThemeManager {
         if (themeToggle) {
             themeToggle.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.toggleTheme();
+                this.toggle();
+            });
+        }
+    }
+
+    watchSystemTheme() {
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                // Only apply system theme if no user preference is saved
+                if (!localStorage.getItem('theme')) {
+                    this.applyTheme(e.matches ? 'dark' : 'light', true);
+                }
             });
         }
     }
 }
 
-// Initialize theme when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize theme manager when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        new ThemeManager();
+    });
+} else {
     new ThemeManager();
-});
+}
+
+// Fallback initialization
+setTimeout(() => {
+    if (!window.themeManagerInitialized) {
+        new ThemeManager();
+    }
+}, 100);

@@ -1,7 +1,7 @@
 const translations = {
     en: {
         title: "Create Account",
-        subtitle: "Join C-Cloud to centralize your VMs at Single Sign-On",
+        subtitle: "Centralize your VMs with Single Sign-On",
         name: "Name",
         email: "Email",
         password: "Password",
@@ -155,16 +155,17 @@ function changeLanguage(lang) {
     document.getElementById('blog-link').textContent = t.blog;
     document.getElementById('current-language').textContent = t.currentLang;
 
-    // Update active state in dropdown
     document.querySelectorAll('.language-option').forEach(option => {
-        option.classList.remove('active');
+        option.classList.remove('bg-blue-50', 'text-blue-600', 'dark:bg-blue-900/30', 'dark:text-blue-300');
         if (option.dataset.lang === lang) {
-            option.classList.add('active');
+            option.classList.add('bg-blue-50', 'text-blue-600', 'dark:bg-blue-900/30', 'dark:text-blue-300');
         }
     });
 
-    // Save preference to localStorage
-    localStorage.setItem('preferred-language', lang);
+    try {
+        localStorage.setItem('preferred-language', lang);
+    } catch (e) {
+    }
 }
 
 // Password strength indicator
