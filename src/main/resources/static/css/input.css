@@ -77,6 +77,26 @@
     --animate-float: float 20s infinite linear;
 }
 
+:root {
+    --input-bg: #fff; /* light mode */
+    --input-text: #111827;
+}
+
+.dark {
+    --input-bg: #1f2937; /* dark mode */
+    --input-text: #f9fafb;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+    -webkit-text-fill-color: var(--input-text) !important;
+}
+
+input:-moz-autofill {
+    box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+    -moz-text-fill-color: var(--input-text) !important;
+}
+
 /* Custom animations */
 @keyframes float {
     0% {

@@ -1018,6 +1018,22 @@
     }
   }
 }
+:root {
+  --input-bg: #fff;
+  --input-text: #111827;
+}
+.dark {
+  --input-bg: #1f2937;
+  --input-text: #f9fafb;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--input-text) !important;
+}
+input:-moz-autofill {
+  box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+  -moz-text-fill-color: var(--input-text) !important;
+}
 @keyframes float {
   0% {
     transform: translateY(0) rotate(0deg);
