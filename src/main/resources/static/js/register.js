@@ -168,32 +168,6 @@ function changeLanguage(lang) {
     }
 }
 
-// Password strength indicator
-const passwordInput = document.querySelector('input[type="password"][th\\:field="*{password}"]');
-const strengthBar = document.getElementById('password-strength-bar');
-
-if (passwordInput && strengthBar) {
-    passwordInput.addEventListener('input', function () {
-        const password = this.value;
-        let strength = 0;
-
-        if (password.length >= 8) strength += 25;
-        if (/[A-Z]/.test(password)) strength += 25;
-        if (/[0-9]/.test(password)) strength += 25;
-        if (/[^A-Za-z0-9]/.test(password)) strength += 25;
-
-        strengthBar.style.width = strength + '%';
-
-        if (strength < 50) {
-            strengthBar.style.background = 'var(--error)';
-        } else if (strength < 75) {
-            strengthBar.style.background = 'var(--warning)';
-        } else {
-            strengthBar.style.background = 'var(--success)';
-        }
-    });
-}
-
 // Language selector functionality
 const languageButton = document.getElementById('language-button');
 const languageDropdown = document.getElementById('language-dropdown');

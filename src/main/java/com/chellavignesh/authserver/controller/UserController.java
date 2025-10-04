@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -53,27 +54,29 @@ public class UserController {
     @Transactional
     public String registerUser(@Valid @ModelAttribute("user") UserDto user,
                                BindingResult bindingResult,
-                               Model model) {
+                               RedirectAttributes redirectAttributes) {
 
-        // Validation errors
         if (bindingResult.hasErrors()) {
-            return "register";
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+            redirectAttributes.addFlashAttribute("user", user);
+            return "redirect:/register";
         }
 
-        // Passwords match check
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             bindingResult.rejectValue("confirmPassword", "error.confirmPassword",
                     "Passwords do not match");
-            return "register";
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+            redirectAttributes.addFlashAttribute("user", user);
+            return "redirect:/register";
         }
 
-        // Email uniqueness
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             bindingResult.rejectValue("email", "error.email", "Email already registered");
-            return "register";
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+            redirectAttributes.addFlashAttribute("user", user);
+            return "redirect:/register";
         }
 
-        // Save user
         UserEntity entity = UserEntity.builder()
                 .fullName(user.getFullName().trim())
                 .email(user.getEmail().toLowerCase().trim())
@@ -84,7 +87,6 @@ public class UserController {
 
         userRepository.save(entity);
 
-        // Redirect with flash attribute
         return "redirect:/login?registered=true";
     }
 
