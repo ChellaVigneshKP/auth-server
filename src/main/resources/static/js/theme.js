@@ -34,9 +34,9 @@ class ThemeManager {
         const themeIcon = document.querySelector('.theme-toggle i');
         if (themeIcon) {
             if (this.currentTheme === 'dark') {
-                themeIcon.className = 'fas fa-sun';
+                themeIcon.className = 'ti ti-sun';
             } else {
-                themeIcon.className = 'fas fa-moon';
+                themeIcon.className = 'ti ti-moon';
             }
         }
     }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - C-Cloud</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen flex flex-col overflow-x-hidden transition-colors duration-300 dark:from-gray-900 dark:to-blue-900">
@@ -127,7 +128,7 @@
 
                 <input type="hidden" id="fingerprint" name="fingerprint" th:field="*{fingerprint}"/>
 
-                <button type="submit" class="btn-primary w-full py-3.5 bg-gradient-to-br from-blue-500 to-blue-800 text-white rounded-xl font-semibold text-base cursor-pointer transition-all duration-300 mt-2.5 hover:from-blue-600 hover:to-blue-900 hover:shadow-lg hover:shadow-blue-500/40"
+                <button type="submit" class="btn-primary w-full py-3.5 bg-gradient-to-br from-blue-500 to-blue-800 text-white rounded-xl font-semibold text-base cursor-pointer transition-all duration-500 mt-2.5 hover:from-blue-600 hover:to-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-500/30 focus:from-blue-600 focus:to-blue-800 transform hover:-translate-y-0.5 focus:-translate-y-0.5"
                         id="submit-button">
                     Create Account
                 </button>

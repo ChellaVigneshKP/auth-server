@@ -1,7 +1,7 @@
 const translations = {
     en: {
         title: "Create Account",
-        subtitle: "Join C-Cloud to store and access your files anywhere",
+        subtitle: "Join C-Cloud to centralize your VMs at Single Sign-On",
         name: "Name",
         email: "Email",
         password: "Password",
@@ -17,7 +17,7 @@ const translations = {
         currentLang: "English"
     }, es: {
         title: "Crear Cuenta",
-        subtitle: "Únete a C-Cloud para almacenar y acceder a tus archivos en cualquier lugar",
+        subtitle: "Únete a C-Cloud para centralizar tus máquinas virtuales con inicio de sesión único",
         name: "Nombre",
         email: "Correo electrónico",
         password: "Contraseña",
@@ -33,7 +33,7 @@ const translations = {
         currentLang: "Español"
     }, fr: {
         title: "Créer un Compte",
-        subtitle: "Rejoignez C-Cloud pour stocker et accéder à vos fichiers partout",
+        subtitle: "Rejoignez C-Cloud pour centraliser vos machines virtuelles avec l'authentification unique",
         name: "Nom",
         email: "E-mail",
         password: "Mot de passe",
@@ -49,7 +49,7 @@ const translations = {
         currentLang: "Français"
     }, de: {
         title: "Konto Erstellen",
-        subtitle: "Treten Sie C-Cloud bei, um Ihre Dateien überall zu speichern und darauf zuzugreifen",
+        subtitle: "Treten Sie C-Cloud bei, um Ihre VMs mit Single Sign-On zu zentralisieren",
         name: "Name",
         email: "E-Mail",
         password: "Passwort",
@@ -65,7 +65,7 @@ const translations = {
         currentLang: "Deutsch"
     }, zh: {
         title: "创建账户",
-        subtitle: "加入 C-Cloud，随时随地存储和访问您的文件",
+        subtitle: "加入 C-Cloud，通过单点登录集中管理您的虚拟机",
         name: "姓名",
         email: "电子邮件",
         password: "密码",
@@ -81,7 +81,7 @@ const translations = {
         currentLang: "中文"
     }, ja: {
         title: "アカウント作成",
-        subtitle: "C-Cloudに参加して、ファイルをどこからでも保存・アクセス",
+        subtitle: "シングルサインオンでVMを一元管理するC-Cloudに参加",
         name: "名前",
         email: "メールアドレス",
         password: "パスワード",
@@ -97,7 +97,7 @@ const translations = {
         currentLang: "日本語"
     }, hi: {
         title: "खाता बनाएं",
-        subtitle: "अपनी फ़ाइलों को कहीं भी संग्रहीत और एक्सेस करने के लिए C-Cloud से जुड़ें",
+        subtitle: "सिंगल साइन-ऑन पर अपने वीएम को केंद्रीकृत करने के लिए C-Cloud से जुड़ें",
         name: "नाम",
         email: "ईमेल",
         password: "पासवर्ड",
@@ -113,7 +113,7 @@ const translations = {
         currentLang: "हिन्दी"
     }, ta: {
         title: "கணக்கை உருவாக்குக",
-        subtitle: "உங்கள் கோப்புகளை எங்கும் சேமிக்க மற்றும் அணுக C-Cloud இல் சேரவும்",
+        subtitle: "ஒற்றை உள்நுழைவில் உங்கள் VM-களை மையப்படுத்த C-Cloud இல் சேருங்கள்",
         name: "பெயர்",
         email: "மின்னஞ்சல்",
         password: "கடவுச்சொல்",
@@ -192,20 +192,6 @@ if (passwordInput && strengthBar) {
         }
     });
 }
-
-// Theme toggle functionality
-document.querySelector('.theme-toggle').addEventListener('click', function () {
-    document.body.classList.toggle('light-mode');
-    document.body.classList.toggle('dark-mode');
-
-    // Update theme icon
-    const icon = this.querySelector('i');
-    if (document.body.classList.contains('dark-mode')) {
-        icon.className = 'fas fa-sun';
-    } else {
-        icon.className = 'fas fa-palette';
-    }
-});
 
 // Language selector functionality
 const languageButton = document.getElementById('language-button');
