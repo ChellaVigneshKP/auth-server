@@ -257,11 +257,19 @@ function initializeFingerprint() {
         });
 }
 
+function setTimezone() {
+    const timezoneInput = document.getElementById('timezone');
+    if (timezoneInput) {
+        timezoneInput.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+}
+
 // Initialize page with saved language preference
 function initializePage() {
     const savedLanguage = localStorage.getItem('preferred-language') || 'en';
     changeLanguage(savedLanguage);
     initializeFingerprint();
+    setTimezone();
 }
 
 // Run initialization when page loads

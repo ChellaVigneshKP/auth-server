@@ -110,5 +110,7 @@ public class UserController {
         private String fingerprint;
 
         private String phone;
+
+        private String timezone;
     }
 }
