@@ -3,6 +3,7 @@ package com.chellavignesh.authserver.controller;
 import com.chellavignesh.authserver.entity.UserEntity;
 import com.chellavignesh.authserver.repository.UserRepository;
 import io.getunleash.Unleash;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -32,12 +33,15 @@ public class UserController {
     private final Unleash unleash;
 
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(Model model, HttpServletRequest request) {
+        request.getSession(true);
+
+        // Always ensure "user" is available for Thymeleaf binding
         if (!model.containsAttribute("user")) {
             model.addAttribute("user", new UserDto());
         }
 
-        // Add feature flags
+        // Add feature flags safely
         Map<String, Boolean> socialLoginFlags = new HashMap<>();
         socialLoginFlags.put("google", unleash.isEnabled("enable-google-login"));
         socialLoginFlags.put("apple", unleash.isEnabled("enable-apple-login"));
@@ -57,30 +61,30 @@ public class UserController {
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
 
+        // Handle validation errors early
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
-            redirectAttributes.addFlashAttribute("user", user);
-            return "redirect:/register";
+            return redirectWithErrors(user, bindingResult, redirectAttributes);
         }
 
+        // Business rule: Passwords must match
         if (!user.getPassword().equals(user.getConfirmPassword())) {
-            bindingResult.rejectValue("confirmPassword", "error.confirmPassword",
-                    "Passwords do not match");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
-            redirectAttributes.addFlashAttribute("user", user);
-            return "redirect:/register";
+            bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Passwords do not match");
+            return redirectWithErrors(user, bindingResult, redirectAttributes);
         }
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        // Business rule: Email must be unique
+        if (userRepository.findByEmail(user.getEmail().trim().toLowerCase()).isPresent()) {
             bindingResult.rejectValue("email", "error.email", "Email already registered");
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
-            redirectAttributes.addFlashAttribute("user", user);
-            return "redirect:/register";
+            return redirectWithErrors(user, bindingResult, redirectAttributes);
         }
+
+        // Normalize inputs before persistence
+        String normalizedFullName = user.getFullName().trim();
+        String normalizedEmail = user.getEmail().trim().toLowerCase();
 
         UserEntity entity = UserEntity.builder()
-                .fullName(user.getFullName().trim())
-                .email(user.getEmail().toLowerCase().trim())
+                .fullName(normalizedFullName)
+                .email(normalizedEmail)
                 .password(passwordEncoder.encode(user.getPassword()))
                 .enabled(true)
                 .createdAt(OffsetDateTime.now()) // timezone-aware timestamp
@@ -91,8 +95,23 @@ public class UserController {
         return "redirect:/login?registered=true";
     }
 
+    /**
+     * Helper method to redirect with errors while preserving validation state.
+     */
+    private String redirectWithErrors(UserDto user,
+                                      BindingResult bindingResult,
+                                      RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+        redirectAttributes.addFlashAttribute("user", user);
+        return "redirect:/register";
+    }
+
+    /**
+     * DTO for user registration with validation annotations.
+     */
     @Data
     public static class UserDto {
+
         @NotBlank(message = "Full name is required")
         private String fullName;
 
@@ -107,10 +126,9 @@ public class UserController {
         @NotBlank(message = "Confirm Password is required")
         private String confirmPassword;
 
+        // Optional metadata
         private String fingerprint;
-
         private String phone;
-
         private String timezone;
     }
 }

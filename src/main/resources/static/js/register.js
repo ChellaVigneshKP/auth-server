@@ -1,113 +1,99 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("form");
     const submitBtn = document.getElementById("submit-button");
-    const nameInput = document.getElementById("name-input");
-    const emailInput = document.getElementById("email-input");
-    const phoneInput = document.getElementById("phone-input");
-    const passwordInput = document.getElementById("password-input");
-    const confirmPasswordInput = document.getElementById("confirm-password-input");
-    const phoneContainer = document.getElementById("phone-input-container");
-    const emailContainer = document.getElementById("email-input-container");
 
-    // Error divs
-    function createErrorDiv(input) {
+    const fields = {
+        name: document.getElementById("name-input"),
+        email: document.getElementById("email-input"),
+        phone: document.getElementById("phone-input"),
+        password: document.getElementById("password-input"),
+        confirmPassword: document.getElementById("confirm-password-input")
+    };
+
+    const containers = {
+        phone: document.getElementById("phone-input-container"),
+        email: document.getElementById("email-input-container")
+    };
+
+    // Create and store error divs
+    const errorDivs = {};
+    Object.keys(fields).forEach(key => {
+        const input = fields[key];
         const div = document.createElement("div");
         div.className = "field-error text-red-600 text-sm mt-1 hidden";
         input.closest(".form-group").appendChild(div);
-        return div;
-    }
+        errorDivs[key] = div;
+    });
 
-    const errorDivs = {
-        name: createErrorDiv(nameInput),
-        email: createErrorDiv(emailInput),
-        phone: createErrorDiv(phoneInput),
-        password: createErrorDiv(passwordInput),
-        confirmPassword: createErrorDiv(confirmPasswordInput),
-    };
+    // Track blurred state
+    const blurred = {};
+    Object.keys(fields).forEach(k => blurred[k] = false);
 
-    setSubmitState(false);
-
+    // Enable/disable submit button
     function setSubmitState(enabled) {
         submitBtn.disabled = !enabled;
         submitBtn.style.opacity = enabled ? "1" : "0.6";
         submitBtn.style.cursor = enabled ? "pointer" : "not-allowed";
     }
+    setSubmitState(false);
 
-    const blurred = {
-        name: false,
-        email: false,
-        phone: false,
-        password: false,
-        confirmPassword: false,
-    };
-
-    // Validation functions
-    const validate = {
-        name: (v) => /^[a-zA-Z\s]{2,}$/.test(v.trim()),
-        email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-        phone: () => {
-            if (!phoneContainer || phoneContainer.classList.contains("hidden"))
-                return true;
-            if (!window.isPhoneReady || !window.getPhoneInstance) return false;
-
-            const phoneInstance = window.getPhoneInstance();
-            const fullNumber = phoneInstance.getNumber();
-            const isValid = phoneInstance.isValidNumber();
-
-            return isValid === true;
+    // Centralized validation rules
+    const fieldRules = {
+        name: {
+            required: "Name is required.",
+            validate: v => /^[a-zA-Z\s]{2,}$/.test(v.trim()),
+            invalidMsg: "Name must be at least 2 letters."
         },
-        password: (v) =>
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(v),
-        confirmPassword: () =>
-            confirmPasswordInput.value === passwordInput.value,
-        passwordStrength: (v) => zxcvbn(v).score >= 3,
+        email: {
+            required: "Email is required.",
+            validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+            invalidMsg: "Enter a valid email address.",
+            hiddenCheck: () => containers.email.classList.contains("hidden")
+        },
+        phone: {
+            required: "Phone number is required.",
+            validate: () => {
+                if (!containers.phone || containers.phone.classList.contains("hidden")) return true;
+                if (!window.isPhoneReady || !window.getPhoneInstance) return false;
+                return window.getPhoneInstance().isValidNumber();
+            },
+            invalidMsg: "Enter a valid phone number.",
+            hiddenCheck: () => containers.phone.classList.contains("hidden")
+        },
+        password: {
+            required: "Password is required.",
+            validate: v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(v),
+            strengthCheck: v => zxcvbn(v).score >= 3,
+            invalidMsg: "Password must be 8+ chars, include upper, lower, number & symbol.",
+            weakMsg: "Password strength must be at least Good."
+        },
+        confirmPassword: {
+            required: "Please confirm your password.",
+            validate: () => fields.confirmPassword.value === fields.password.value,
+            invalidMsg: "Passwords do not match."
+        }
     };
 
+    // Check a single field
     function checkField(key, value) {
+        const rule = fieldRules[key];
         const errorDiv = errorDivs[key];
-        if (!errorDiv) return true;
+        if (!rule || !errorDiv) return true;
 
-        let valid = false;
+        let valid = true;
         let message = "";
 
-        switch (key) {
-            case "name":
-                valid = validate.name(value);
-                if (!valid) message = "Name must be at least 2 letters.";
-                break;
-            case "email":
-                if (!emailContainer.classList.contains("hidden")) {
-                    valid = validate.email(value);
-                    if (!valid) message = "Enter a valid email address.";
-                } else valid = true;
-                break;
-            case "phone":
-                if (phoneContainer && !phoneContainer.classList.contains("hidden")) {
-                    if (!phoneInput.value.trim()) {
-                        valid = false;
-                        message = "Phone number is required.";
-                    } else {
-                        valid = validate.phone();
-                        if (!valid) {
-                            message = !window.isPhoneReady
-                                ? "Phone validation initializing..."
-                                : "Enter a valid phone number.";
-                        }
-                    }
-                } else valid = true;
-                break;
-            case "password":
-                valid = validate.password(value) && validate.passwordStrength(value);
-                if (!validate.password(value))
-                    message =
-                        "Password must be 8+ chars, include upper, lower, number & symbol.";
-                else if (!validate.passwordStrength(value))
-                    message = "Password strength must be at least Good.";
-                break;
-            case "confirmPassword":
-                valid = validate.confirmPassword();
-                if (!valid) message = "Passwords do not match.";
-                break;
+        if (rule.hiddenCheck?.()) {
+            valid = true;
+        } else if (!value.trim()) {
+            valid = false;
+            message = rule.required;
+        } else if (!rule.validate(value)) {
+            valid = false;
+            message = rule.invalidMsg;
+        } else if (rule.strengthCheck && !rule.strengthCheck(value)) {
+            valid = false;
+            message = rule.weakMsg;
         }
 
         if (!valid && blurred[key]) {
@@ -121,49 +107,36 @@ document.addEventListener("DOMContentLoaded", () => {
         return valid;
     }
 
+    // Validate all fields
     function validateAll() {
-        const values = {
-            name: nameInput.value,
-            email: emailInput.value,
-            phone: phoneInput ? phoneInput.value : "",
-            password: passwordInput.value,
-            confirmPassword: confirmPasswordInput.value,
-        };
-
-        const allValid = Object.keys(values).every((k) =>
-            checkField(k, values[k])
-        );
+        const allValid = Object.keys(fields).every(key => {
+            const value = fields[key] ? fields[key].value : "";
+            return checkField(key, value);
+        });
         setSubmitState(allValid);
         return allValid;
     }
 
     window.validateAll = validateAll;
 
-    // Input & blur listeners
-    [
-        { input: nameInput, key: "name" },
-        { input: emailInput, key: "email" },
-        { input: phoneInput, key: "phone" },
-        { input: passwordInput, key: "password" },
-        { input: confirmPasswordInput, key: "confirmPassword" },
-    ].forEach((f) => {
-        if (!f.input) return;
+    // Attach listeners
+    Object.keys(fields).forEach(key => {
+        const input = fields[key];
+        if (!input) return;
 
-        f.input.addEventListener("input", () => {
-            if (blurred[f.key]) {
-                checkField(f.key, f.input.value);
-            }
+        input.addEventListener("input", () => {
+            if (blurred[key]) checkField(key, input.value);
             validateAll();
         });
 
-        f.input.addEventListener("blur", () => {
-            blurred[f.key] = true;
-            checkField(f.key, f.input.value);
+        input.addEventListener("blur", () => {
+            blurred[key] = true;
+            checkField(key, input.value);
             validateAll();
         });
     });
 
-    // Toggle contact
+    // Toggle contact fields
     const toggleBtn = document.getElementById("toggle-contact");
     if (toggleBtn) {
         toggleBtn.addEventListener("click", () => {
@@ -175,15 +148,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // On form submit
-    form.addEventListener("submit", (e) => {
-        Object.keys(blurred).forEach((k) => (blurred[k] = true));
+    // Form submit
+    form.addEventListener("submit", e => {
+        Object.keys(blurred).forEach(k => blurred[k] = true);
         const isValid = validateAll();
         if (!isValid) {
             e.preventDefault();
             const firstError = document.querySelector(".field-error:not(.hidden)");
-            if (firstError)
-                firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+            if (firstError) firstError.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     });
 
