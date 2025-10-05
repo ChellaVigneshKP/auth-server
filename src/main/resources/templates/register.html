@@ -254,11 +254,12 @@
 </button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.11.2/build/js/intlTelInput.min.js"></script>
 <script src="/js/fingerprint.min.js"></script>
 <script th:src="@{/js/theme.js}"></script>
-<script th:src="@{/js/register.js}"></script>
+<script th:src="@{/js/register-local.js}"></script>
 <script th:src="@{/js/password-meter.js}"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.11.2/build/js/intlTelInput.min.js"></script>
-<script th:if="${enablePhoneSignup}" th:src="@{/js/phone-signup.js}"></script>
+<script th:src="@{/js/phone-signup.js}"></script>
+<script th:src="@{/js/register.js}"></script>
 </body>
 </html>

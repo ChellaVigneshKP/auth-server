@@ -1,276 +1,193 @@
-const translations = {
-    en: {
-        title: "Create Account",
-        subtitle: "Centralize your VMs with Single Sign-On",
-        name: "Name",
-        email: "Email",
-        password: "Password",
-        confirmPassword: "Confirm Password",
-        createAccount: "Create Account",
-        orSignUp: "Or sign up with",
-        alreadyAccount: "Already have an account?",
-        login: "Log in",
-        usePhoneInstead: "Use phone instead",
-        useEmailInstead: "Use email instead",
-        phone: "Phone number",
-        showPassword: "Show",
-        hidePassword: "Hide",
-        phoneVerification: "We'll send a verification code to this number",
-        footer: "By signing up, you agree to our Terms of Service and Privacy Policy.",
-        help: "Help Center",
-        status: "Status",
-        blog: "Blog",
-        currentLang: "English"
-    }, es: {
-        title: "Crear Cuenta",
-        subtitle: "Únete a C-Cloud para centralizar tus máquinas virtuales con inicio de sesión único",
-        name: "Nombre",
-        email: "Correo electrónico",
-        password: "Contraseña",
-        confirmPassword: "Confirmar Contraseña",
-        createAccount: "Crear Cuenta",
-        orSignUp: "O regístrate con",
-        alreadyAccount: "¿Ya tienes una cuenta?",
-        login: "Iniciar Sesión",
-        usePhoneInstead: "Usar teléfono en su lugar",
-        useEmailInstead: "Usar correo en su lugar",
-        phone: "Número de teléfono",
-        showPassword: "Mostrar",
-        hidePassword: "Ocultar",
-        phoneVerification: "Enviaremos un código de verificación a este número",
-        footer: "Al registrarte, aceptas nuestros Términos de Servicio y Política de Privacidad.",
-        help: "Centro de Ayuda",
-        status: "Estado",
-        blog: "Blog",
-        currentLang: "Español"
-    }, fr: {
-        title: "Créer un Compte",
-        subtitle: "Rejoignez C-Cloud pour centraliser vos machines virtuelles avec l'authentification unique",
-        name: "Nom",
-        email: "E-mail",
-        password: "Mot de passe",
-        confirmPassword: "Confirmer le mot de passe",
-        createAccount: "Créer un Compte",
-        orSignUp: "Ou inscrivez-vous avec",
-        alreadyAccount: "Vous avez déjà un compte ?",
-        login: "Se connecter",
-        usePhoneInstead: "Utiliser le téléphone à la place",
-        useEmailInstead: "Utiliser l'email à la place",
-        phone: "Numéro de téléphone",
-        showPassword: "Afficher",
-        hidePassword: "Masquer",
-        phoneVerification: "Nous enverrons un code de vérification à ce numéro",
-        footer: "En vous inscrivant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité.",
-        help: "Centre d'Aide",
-        status: "Statut",
-        blog: "Blog",
-        currentLang: "Français"
-    }, de: {
-        title: "Konto Erstellen",
-        subtitle: "Treten Sie C-Cloud bei, um Ihre VMs mit Single Sign-On zu zentralisieren",
-        name: "Name",
-        email: "E-Mail",
-        password: "Passwort",
-        confirmPassword: "Passwort Bestätigen",
-        createAccount: "Konto Erstellen",
-        orSignUp: "Oder registrieren Sie sich mit",
-        alreadyAccount: "Haben Sie bereits ein Konto?",
-        login: "Anmelden",
-        usePhoneInstead: "Stattdessen Telefon verwenden",
-        useEmailInstead: "Stattdessen E-Mail verwenden",
-        phone: "Telefonnummer",
-        showPassword: "Zeigen",
-        hidePassword: "Verbergen",
-        phoneVerification: "Wir senden einen Bestätigungscode an diese Nummer",
-        footer: "Mit der Registrierung stimmen Sie unseren Nutzungsbedingungen und Datenschutzbestimmungen zu.",
-        help: "Hilfe-Center",
-        status: "Status",
-        blog: "Blog",
-        currentLang: "Deutsch"
-    }, zh: {
-        title: "创建账户",
-        subtitle: "加入 C-Cloud，通过单点登录集中管理您的虚拟机",
-        name: "姓名",
-        email: "电子邮件",
-        password: "密码",
-        confirmPassword: "确认密码",
-        createAccount: "创建账户",
-        orSignUp: "或使用以下方式注册",
-        alreadyAccount: "已有账户？",
-        login: "登录",
-        usePhoneInstead: "改用手机",
-        useEmailInstead: "改用邮箱",
-        phone: "电话号码",
-        showPassword: "显示",
-        hidePassword: "隐藏",
-        phoneVerification: "我们将向此号码发送验证码",
-        footer: "注册即表示您同意我们的服务条款和隐私政策。",
-        help: "帮助中心",
-        status: "状态",
-        blog: "博客",
-        currentLang: "中文"
-    }, ja: {
-        title: "アカウント作成",
-        subtitle: "シングルサインオンでVMを一元管理するC-Cloudに参加",
-        name: "名前",
-        email: "メールアドレス",
-        password: "パスワード",
-        confirmPassword: "パスワード確認",
-        createAccount: "アカウント作成",
-        orSignUp: "または以下でサインアップ",
-        alreadyAccount: "既にアカウントをお持ちですか？",
-        login: "ログイン",
-        usePhoneInstead: "代わりに電話を使用",
-        useEmailInstead: "代わりにメールを使用",
-        phone: "電話番号",
-        showPassword: "表示",
-        hidePassword: "非表示",
-        phoneVerification: "この番号に確認コードを送信します",
-        footer: "サインアップすることで、利用規約とプライバシーポリシーに同意したものとみなされます。",
-        help: "ヘルプセンター",
-        status: "ステータス",
-        blog: "ブログ",
-        currentLang: "日本語"
-    }, hi: {
-        title: "खाता बनाएं",
-        subtitle: "सिंगल साइन-ऑन पर अपने वीएम को केंद्रीकृत करने के लिए C-Cloud से जुड़ें",
-        name: "नाम",
-        email: "ईमेल",
-        password: "पासवर्ड",
-        confirmPassword: "पासवर्ड की पुष्टि करें",
-        createAccount: "खाता बनाएं",
-        orSignUp: "या इसके साथ साइन अप करें",
-        alreadyAccount: "पहले से ही एक खाता है?",
-        login: "लॉग इन करें",
-        usePhoneInstead: "इसके बजाय फोन का उपयोग करें",
-        useEmailInstead: "इसके बजाय ईमेल का उपयोग करें",
-        phone: "फ़ोन नंबर",
-        showPassword: "दिखाएं",
-        hidePassword: "छुपाएं",
-        phoneVerification: "हम इस नंबर पर एक सत्यापन कोड भेजेंगे",
-        footer: "साइन अप करके, आप हमारी सेवा की शर्तें और गोपनीयता नीति से सहमत होते हैं।",
-        help: "सहायता केंद्र",
-        status: "स्थिति",
-        blog: "ब्लॉग",
-        currentLang: "हिन्दी"
-    }, ta: {
-        title: "கணக்கை உருவாக்குக",
-        subtitle: "ஒற்றை உள்நுழைவில் உங்கள் VM-களை மையப்படுத்த C-Cloud இல் சேருங்கள்",
-        name: "பெயர்",
-        email: "மின்னஞ்சல்",
-        password: "கடவுச்சொல்",
-        confirmPassword: "கடவுச்சொல்லை உறுதிப்படுத்துக",
-        createAccount: "கணக்கை உருவாக்குக",
-        orSignUp: "அல்லது இதனுடன் பதிவு செய்யவும்",
-        alreadyAccount: "ஏற்கனவே ஒரு கணக்கு உள்ளதா?",
-        login: "உள்நுழைய",
-        usePhoneInstead: "அதற்கு பதிலாக தொலைபேசியைப் பயன்படுத்தவும்",
-        useEmailInstead: "அதற்கு பதிலாக மின்னஞ்சலைப் பயன்படுத்தவும்",
-        phone: "தொலைபேசி எண்",
-        showPassword: "காட்டு",
-        hidePassword: "மறை",
-        phoneVerification: "இந்த எண்ணுக்கு ஒரு சரிபார்ப்புக் குறியீட்டை அனுப்புவோம்",
-        footer: "பதிவு செய்வதன் மூலம், நீங்கள் எங்கள் சேவை விதிமுறைகள் மற்றும் தனியுரிமைக் கொள்கையை ஏற்கிறீர்கள்.",
-        help: "உதவி மையம்",
-        status: "நிலை",
-        blog: "வலைப்பதிவு",
-        currentLang: "தமிழ்"
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("form");
+    const submitBtn = document.getElementById("submit-button");
+    const nameInput = document.getElementById("name-input");
+    const emailInput = document.getElementById("email-input");
+    const phoneInput = document.getElementById("phone-input");
+    const passwordInput = document.getElementById("password-input");
+    const confirmPasswordInput = document.getElementById("confirm-password-input");
+    const phoneContainer = document.getElementById("phone-input-container");
+    const emailContainer = document.getElementById("email-input-container");
+
+    // Error divs
+    function createErrorDiv(input) {
+        const div = document.createElement("div");
+        div.className = "field-error text-red-600 text-sm mt-1 hidden";
+        input.closest(".form-group").appendChild(div);
+        return div;
     }
-};
 
-// Current language
-let currentLanguage = 'en';
+    const errorDivs = {
+        name: createErrorDiv(nameInput),
+        email: createErrorDiv(emailInput),
+        phone: createErrorDiv(phoneInput),
+        password: createErrorDiv(passwordInput),
+        confirmPassword: createErrorDiv(confirmPasswordInput),
+    };
 
-// Function to change language
-function changeLanguage(lang) {
-    currentLanguage = lang;
-    const t = translations[lang];
+    setSubmitState(false);
 
-    // Update all text elements
-    document.getElementById('page-title').textContent = t.title;
-    document.getElementById('page-subtitle').textContent = t.subtitle;
-    document.getElementById('name-input').placeholder = t.name;
-    document.getElementById('email-input').placeholder = t.email;
-    document.getElementById('password-input').placeholder = t.password;
-    document.getElementById('confirm-password-input').placeholder = t.confirmPassword;
-    document.getElementById('submit-button').textContent = t.createAccount;
-    document.getElementById('divider-text').textContent = t.orSignUp;
-    document.getElementById('login-prompt').textContent = t.alreadyAccount;
-    document.getElementById('login-link').textContent = t.login;
-    document.getElementById('footer-text').innerHTML = t.footer.replace('Terms of Service', '<a href="#" class="hover:underline">' + (lang === 'en' ? 'Terms of Service' : 'Terms of Service') + '</a>').replace('Privacy Policy', '<a href="#" class="hover:underline">' + (lang === 'en' ? 'Privacy Policy' : 'Privacy Policy') + '</a>');
-    document.getElementById('help-link').textContent = t.help;
-    document.getElementById('status-link').textContent = t.status;
-    document.getElementById('blog-link').textContent = t.blog;
-    document.getElementById('current-language').textContent = t.currentLang;
+    function setSubmitState(enabled) {
+        submitBtn.disabled = !enabled;
+        submitBtn.style.opacity = enabled ? "1" : "0.6";
+        submitBtn.style.cursor = enabled ? "pointer" : "not-allowed";
+    }
 
-    document.querySelectorAll('.language-option').forEach(option => {
-        option.classList.remove('bg-blue-50', 'text-blue-600', 'dark:bg-blue-900/30', 'dark:text-blue-300');
-        if (option.dataset.lang === lang) {
-            option.classList.add('bg-blue-50', 'text-blue-600', 'dark:bg-blue-900/30', 'dark:text-blue-300');
+    const blurred = {
+        name: false,
+        email: false,
+        phone: false,
+        password: false,
+        confirmPassword: false,
+    };
+
+    // Validation functions
+    const validate = {
+        name: (v) => /^[a-zA-Z\s]{2,}$/.test(v.trim()),
+        email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+        phone: () => {
+            if (!phoneContainer || phoneContainer.classList.contains("hidden"))
+                return true;
+            if (!window.isPhoneReady || !window.getPhoneInstance) return false;
+
+            const phoneInstance = window.getPhoneInstance();
+            const fullNumber = phoneInstance.getNumber();
+            const isValid = phoneInstance.isValidNumber();
+
+            return isValid === true;
+        },
+        password: (v) =>
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(v),
+        confirmPassword: () =>
+            confirmPasswordInput.value === passwordInput.value,
+        passwordStrength: (v) => zxcvbn(v).score >= 3,
+    };
+
+    function checkField(key, value) {
+        const errorDiv = errorDivs[key];
+        if (!errorDiv) return true;
+
+        let valid = false;
+        let message = "";
+
+        switch (key) {
+            case "name":
+                valid = validate.name(value);
+                if (!valid) message = "Name must be at least 2 letters.";
+                break;
+            case "email":
+                if (!emailContainer.classList.contains("hidden")) {
+                    valid = validate.email(value);
+                    if (!valid) message = "Enter a valid email address.";
+                } else valid = true;
+                break;
+            case "phone":
+                if (phoneContainer && !phoneContainer.classList.contains("hidden")) {
+                    if (!phoneInput.value.trim()) {
+                        valid = false;
+                        message = "Phone number is required.";
+                    } else {
+                        valid = validate.phone();
+                        if (!valid) {
+                            message = !window.isPhoneReady
+                                ? "Phone validation initializing..."
+                                : "Enter a valid phone number.";
+                        }
+                    }
+                } else valid = true;
+                break;
+            case "password":
+                valid = validate.password(value) && validate.passwordStrength(value);
+                if (!validate.password(value))
+                    message =
+                        "Password must be 8+ chars, include upper, lower, number & symbol.";
+                else if (!validate.passwordStrength(value))
+                    message = "Password strength must be at least Good.";
+                break;
+            case "confirmPassword":
+                valid = validate.confirmPassword();
+                if (!valid) message = "Passwords do not match.";
+                break;
+        }
+
+        if (!valid && blurred[key]) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove("hidden");
+        } else {
+            errorDiv.textContent = "";
+            errorDiv.classList.add("hidden");
+        }
+
+        return valid;
+    }
+
+    function validateAll() {
+        const values = {
+            name: nameInput.value,
+            email: emailInput.value,
+            phone: phoneInput ? phoneInput.value : "",
+            password: passwordInput.value,
+            confirmPassword: confirmPasswordInput.value,
+        };
+
+        const allValid = Object.keys(values).every((k) =>
+            checkField(k, values[k])
+        );
+        setSubmitState(allValid);
+        return allValid;
+    }
+
+    window.validateAll = validateAll;
+
+    // Input & blur listeners
+    [
+        { input: nameInput, key: "name" },
+        { input: emailInput, key: "email" },
+        { input: phoneInput, key: "phone" },
+        { input: passwordInput, key: "password" },
+        { input: confirmPasswordInput, key: "confirmPassword" },
+    ].forEach((f) => {
+        if (!f.input) return;
+
+        f.input.addEventListener("input", () => {
+            if (blurred[f.key]) {
+                checkField(f.key, f.input.value);
+            }
+            validateAll();
+        });
+
+        f.input.addEventListener("blur", () => {
+            blurred[f.key] = true;
+            checkField(f.key, f.input.value);
+            validateAll();
+        });
+    });
+
+    // Toggle contact
+    const toggleBtn = document.getElementById("toggle-contact");
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            setTimeout(() => {
+                blurred.email = false;
+                blurred.phone = false;
+                validateAll();
+            }, 300);
+        });
+    }
+
+    // On form submit
+    form.addEventListener("submit", (e) => {
+        Object.keys(blurred).forEach((k) => (blurred[k] = true));
+        const isValid = validateAll();
+        if (!isValid) {
+            e.preventDefault();
+            const firstError = document.querySelector(".field-error:not(.hidden)");
+            if (firstError)
+                firstError.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     });
 
-    try {
-        localStorage.setItem('preferred-language', lang);
-    } catch (e) {
-    }
-}
-
-// Language selector functionality
-const languageButton = document.getElementById('language-button');
-const languageDropdown = document.getElementById('language-dropdown');
-
-languageButton.addEventListener('click', function () {
-    languageDropdown.classList.toggle('show');
-    languageButton.classList.toggle('active');
+    // Initial delayed validation
+    setTimeout(validateAll, 1500);
+    setTimeout(validateAll, 3000);
 });
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function (event) {
-    if (!languageButton.contains(event.target) && !languageDropdown.contains(event.target)) {
-        languageDropdown.classList.remove('show');
-        languageButton.classList.remove('active');
-    }
-});
-
-// Language option selection
-document.querySelectorAll('.language-option').forEach(option => {
-    option.addEventListener('click', function () {
-        const lang = this.dataset.lang;
-        changeLanguage(lang);
-        languageDropdown.classList.remove('show');
-        languageButton.classList.remove('active');
-    });
-});
-
-
-// Initialize FingerprintJS
-function initializeFingerprint() {
-    const fpPromise = FingerprintJS.load();
-    fpPromise
-        .then(fp => fp.get())
-        .then(result => {
-            document.getElementById("fingerprint").value = result.visitorId;
-            console.log(result.visitorId);
-        })
-        .catch(() => {
-        });
-}
-
-function setTimezone() {
-    const timezoneInput = document.getElementById('timezone');
-    if (timezoneInput) {
-        timezoneInput.value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    }
-}
-
-// Initialize page with saved language preference
-function initializePage() {
-    const savedLanguage = localStorage.getItem('preferred-language') || 'en';
-    changeLanguage(savedLanguage);
-    initializeFingerprint();
-    setTimezone();
-}
-
-// Run initialization when page loads
-window.addEventListener('load', initializePage);
