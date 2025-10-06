@@ -2,6 +2,7 @@ package com.chellavignesh.authserver.controller;
 
 import com.chellavignesh.authserver.entity.UserEntity;
 import com.chellavignesh.authserver.repository.UserRepository;
+import com.chellavignesh.authserver.service.TurnstileService;
 import io.getunleash.Unleash;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +30,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
+    @Value("${turnstile.site-key}")
+    private String turnstileSiteKey;
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final Unleash unleash;
+    private final TurnstileService turnstileService;
 
     @GetMapping("/register")
     public String showRegisterForm(Model model, HttpServletRequest request) {
@@ -49,6 +55,7 @@ public class UserController {
 
         model.addAttribute("socialLoginFlags", socialLoginFlags);
         model.addAttribute("enablePhoneSignup", unleash.isEnabled("enable-phone-signup"));
+        model.addAttribute("turnstileSiteKey", turnstileSiteKey);
         model.addAttribute("anySocialLoginEnabled",
                 socialLoginFlags.values().stream().anyMatch(Boolean::booleanValue));
 
@@ -59,7 +66,14 @@ public class UserController {
     @Transactional
     public String registerUser(@Valid @ModelAttribute("user") UserDto user,
                                BindingResult bindingResult,
+                               HttpServletRequest request,
                                RedirectAttributes redirectAttributes) {
+
+        String turnstileToken = request.getParameter("cf-turnstile-response");
+        if (turnstileToken == null || !turnstileService.verifyToken(turnstileToken, request.getRemoteAddr())) {
+            bindingResult.reject("turnstile", "CAPTCHA verification failed");
+            return redirectWithErrors(user, bindingResult, redirectAttributes);
+        }
 
         // Handle validation errors early
         if (bindingResult.hasErrors()) {
@@ -128,6 +142,7 @@ public class UserController {
 
         // Optional metadata
         private String fingerprint;
+        private String botdFingerprint;
         private String phone;
         private String timezone;
     }

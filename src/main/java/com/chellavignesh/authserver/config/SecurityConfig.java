@@ -85,6 +85,23 @@ public class SecurityConfig {
                 )
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/oauth2/token", "/oauth2/introspect", "/oauth2/revoke")
+                ).headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives(
+                                        "default-src 'self'; " +
+                                                "script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://challenges.cloudflare.com; " +
+                                                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+                                                "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://challenges.cloudflare.com data:; " +
+                                                "img-src 'self' data: blob: https:; " +
+                                                "connect-src 'self' https://challenges.cloudflare.com https://ipapi.co; " +
+                                                "frame-src 'self' https://challenges.cloudflare.com; " +
+                                                "worker-src 'self' blob:; " +
+                                                "manifest-src 'self'; " +
+                                                "object-src 'none'; " +
+                                                "base-uri 'self'; " +
+                                                "form-action 'self';"
+                                )
+                        )
                 );
 
         return http.build();

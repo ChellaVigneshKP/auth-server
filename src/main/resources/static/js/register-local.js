@@ -264,11 +264,23 @@ function setTimezone() {
     }
 }
 
+// Initialize BotD (free version)
+function initializeBotD() {
+    import('/js/botd.min.js')
+        .then(BotD => BotD.load())
+        .then(botd => botd.detect())
+        .then(result => {
+            document.getElementById("botd-fingerprint").value = JSON.stringify(result);
+        })
+        .catch(() => {});
+}
+
 // Initialize page with saved language preference
 function initializePage() {
     const savedLanguage = localStorage.getItem('preferred-language') || 'en';
     changeLanguage(savedLanguage);
     initializeFingerprint();
+    initializeBotD();
     setTimezone();
 }
 

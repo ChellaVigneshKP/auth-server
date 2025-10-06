@@ -1,109 +1,73 @@
 class ThemeManager {
     constructor() {
-        this.theme = window.__initialTheme || this.detectTheme();
+        this.theme = this.detectTheme();
         this.init();
     }
 
     detectTheme() {
         try {
-            return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            return localStorage.getItem('theme') ||
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         } catch {
             return 'light';
         }
     }
 
     init() {
-        // Show content now that theme is ready
-        this.showContent();
-        this.updateIcon();
-        this.bindEvents();
-
-        // Listen for system theme changes
-        this.watchSystemTheme();
-    }
-
-    showContent() {
         document.body.classList.remove('no-theme-flash');
-        document.body.classList.add('theme-loaded');
+        this.applyTheme(this.theme, false);
+        this.bindEvents();
+        this.watchSystemTheme();
     }
 
     applyTheme(theme, withTransition = true) {
         const html = document.documentElement;
 
-        if (!withTransition) {
-            html.classList.add('no-transition');
-        }
+        if (!withTransition) html.classList.add('no-transition');
+        html.classList.toggle('dark', theme === 'dark');
 
-        if (theme === 'dark') {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
-
-        // Force reflow
-        void html.offsetWidth;
-
-        if (!withTransition) {
-            setTimeout(() => {
-                html.classList.remove('no-transition');
-            }, 10);
-        }
-
-        try {
-            localStorage.setItem('theme', theme);
-        } catch (e) {
-        }
-
+        // Update theme in storage
+        try { localStorage.setItem('theme', theme); } catch {}
         this.theme = theme;
-        this.updateIcon();
-    }
+        this.updateTurnstileTheme(theme);
 
-    updateIcon() {
-        const icon = document.querySelector('.theme-toggle i');
-        if (icon) {
-            icon.className = this.theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
-        }
-    }
-
-    toggle() {
-        const newTheme = this.theme === 'light' ? 'dark' : 'light';
-        this.applyTheme(newTheme, true);
+        if (!withTransition) setTimeout(() => html.classList.remove('no-transition'), 10);
     }
 
     bindEvents() {
-        const themeToggle = document.querySelector('.theme-toggle');
-        if (themeToggle) {
-            themeToggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.toggle();
-            });
-        }
+        document.querySelector('.theme-toggle')?.addEventListener('click', e => {
+            e.preventDefault();
+            const newTheme = this.theme === 'dark' ? 'light' : 'dark';
+            this.applyTheme(newTheme, true);
+        });
     }
 
     watchSystemTheme() {
-        if (window.matchMedia) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-                // Only apply system theme if no user preference is saved
-                if (!localStorage.getItem('theme')) {
-                    this.applyTheme(e.matches ? 'dark' : 'light', true);
-                }
-            });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                this.applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    }
+
+    updateTurnstileTheme(theme) {
+        const container = document.getElementById('turnstile-container');
+        const siteKey = document.querySelector('meta[name="turnstile-site-key"]')?.content;
+        if (!container || !window.turnstile) return;
+
+        // Remove previous widget cleanly
+        if (container._cfTurnstileWidgetId) {
+            turnstile.remove(container._cfTurnstileWidgetId);
         }
+
+        // Re-render with current theme
+        container._cfTurnstileWidgetId = turnstile.render("#turnstile-container", {
+            sitekey: siteKey,
+            theme: theme === 'dark' ? 'dark' : 'light',
+            callback: () => {}
+        });
     }
 }
 
-// Initialize theme manager when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        new ThemeManager();
-    });
-} else {
-    new ThemeManager();
-}
-
-// Fallback initialization
-setTimeout(() => {
-    if (!window.themeManagerInitialized) {
-        new ThemeManager();
-    }
-}, 100);
+// Initialize after page load
+document.addEventListener('DOMContentLoaded', () => new ThemeManager());
