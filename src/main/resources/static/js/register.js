@@ -37,6 +37,41 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     setSubmitState(false);
 
+    // Debounce helper
+    const debounce = (fn, delay = 300) => {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn(...args), delay);
+        };
+    };
+
+    function validateMobileNumber(phoneInput, phoneContainer) {
+        if (!phoneContainer || phoneContainer.classList.contains("hidden")) return true;
+        if (!window.isPhoneReady?.() || !window.getPhoneInstance) return false;
+
+        const iti = window.getPhoneInstance();
+        const value = phoneInput.value.trim();
+        if (!value) return false;
+
+        // intl-tel-input validation
+        if (!iti.isValidNumber?.()) return false;
+        const type = iti.getNumberType?.();
+        if (![1, 2].includes(type)) return false; // MOBILE or FIXED_LINE_OR_MOBILE
+
+        // libphonenumber-js backup validation
+        try {
+            const countryCode = iti.getSelectedCountryData()?.iso2?.toUpperCase() || "IN";
+            const phoneNumber = window.libphonenumber?.parsePhoneNumber?.(value, countryCode);
+            if (!phoneNumber?.isValid()) return false;
+            const libType = phoneNumber.getType?.();
+            return ["MOBILE", "FIXED_LINE_OR_MOBILE"].includes(libType);
+        } catch (err) {
+            console.error("Phone validation error:", err);
+            return false;
+        }
+    }
+
     // Centralized validation rules
     const fieldRules = {
         name: {
@@ -52,11 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         phone: {
             required: "Phone number is required.",
-            validate: () => {
-                if (!containers.phone || containers.phone.classList.contains("hidden")) return true;
-                if (!window.isPhoneReady || !window.getPhoneInstance) return false;
-                return window.getPhoneInstance().isValidNumber();
-            },
+            validate: () => validateMobileNumber(fields.phone, containers.phone),
             invalidMsg: "Enter a valid phone number.",
             hiddenCheck: () => containers.phone.classList.contains("hidden")
         },
@@ -74,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Check a single field
     function checkField(key, value) {
         const rule = fieldRules[key];
         const errorDiv = errorDivs[key];
@@ -83,9 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let valid = true;
         let message = "";
 
-        if (rule.hiddenCheck?.()) {
-            valid = true;
-        } else if (!value.trim()) {
+        if (rule.hiddenCheck?.()) valid = true;
+        else if (!value.trim()) {
             valid = false;
             message = rule.required;
         } else if (!rule.validate(value)) {
@@ -107,7 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return valid;
     }
 
-    // Validate all fields
     function validateAll() {
         const allValid = Object.keys(fields).every(key => {
             const value = fields[key] ? fields[key].value : "";
@@ -119,16 +147,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.validateAll = validateAll;
 
-    // Attach listeners
+    // Attach listeners with debouncing
     Object.keys(fields).forEach(key => {
         const input = fields[key];
         if (!input) return;
 
-        input.addEventListener("input", () => {
+        const debouncedValidation = debounce(() => {
             if (blurred[key]) checkField(key, input.value);
             validateAll();
-        });
+        }, 300);
 
+        input.addEventListener("input", debouncedValidation);
         input.addEventListener("blur", () => {
             blurred[key] = true;
             checkField(key, input.value);
