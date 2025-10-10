@@ -66,7 +66,7 @@ public class ConsentController {
         model.addAttribute("scopes", withDescription(scopesToApprove));
         model.addAttribute("previouslyApprovedScopes", withDescription(previouslyApprovedScopes));
 
-        return "consent";
+        return "oauth2/consent";
     }
 
     private Set<ScopeWithDescription> withDescription(Set<String> scopes) {

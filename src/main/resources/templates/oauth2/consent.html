@@ -1,91 +1,103 @@
-<!--
-https://github.com/spring-projects/spring-authorization-server/blob/683dad14431c9d960a7070bf28d37f76e6039411/samples/boot/oauth2-integration/authorizationserver-custom-consent-page/src/main/resources/templates/consent.html
--->
-
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <title>Consent required</title>
-    <style>
-        body {
-            background-color: #6cb52d;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Authorization - C-Cloud</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <script th:src="@{/js/theme-initialize.js}"></script>
 </head>
-<body>
-<div class="container">
-    <div class="py-5">
-        <h1 class="text-center text-primary">App permissions</h1>
-    </div>
-    <div class="row">
-        <div class="col text-center">
-            <p>
-                The application
-                <span class="font-weight-bold text-primary" th:text="${clientId}"></span>
-                wants to access your account
-                <span class="font-weight-bold" th:text="${principalName}"></span>
-            </p>
+<body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen flex flex-col overflow-x-hidden transition-colors duration-300 dark:from-gray-900 dark:to-blue-900">
+
+<!-- Background Animation -->
+<div class="fixed inset-0 -z-10 overflow-hidden">
+    <div class="floating-shape absolute w-72 h-72 -top-24 -left-24 rounded-full bg-blue-500/10 dark:bg-blue-500/30 animate-float"></div>
+    <div class="floating-shape absolute w-48 h-48 top-2/5 -right-12 rounded-full bg-purple-500/10 dark:bg-purple-500/30 animate-float animation-delay-2000"></div>
+    <div class="floating-shape absolute w-36 h-36 -bottom-12 left-1/3 rounded-full bg-cyan-400/10 dark:bg-cyan-400/30 animate-float animation-delay-4000"></div>
+</div>
+
+<div class="container max-w-6xl mx-auto px-5 w-full">
+    <!-- Header -->
+    <header class="flex justify-between items-center py-5">
+        <div class="logo flex items-center gap-3 font-bold text-2xl text-blue-800 dark:text-white">
+            <div class="logo-icon w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-800 rounded-xl flex items-center justify-center text-white">
+                <i class="fas fa-cloud"></i>
+            </div>
+            <span>C-Cloud</span>
         </div>
-    </div>
-    <div class="row pb-3">
-        <div class="col text-center"><p>The following permissions are requested by the above app.<br/>Please review
-            these and consent if you approve.</p></div>
-    </div>
-    <div class="row">
-        <div class="col text-center">
-            <form method="post" th:action="@{/oauth2/authorize}">
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content flex items-center justify-center flex-grow py-10">
+        <div class="card bg-white rounded-2xl shadow-lg p-10 w-full max-w-md transition-all duration-300 hover:shadow-xl dark:bg-gray-800 dark:shadow-2xl dark:hover:shadow-3xl">
+
+            <!-- Card Header -->
+            <div class="card-header text-center mb-8">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2 dark:text-white">App Authorization</h1>
+                <p class="text-gray-600 text-base dark:text-gray-400">Review and approve the permissions requested by this application</p>
+            </div>
+
+            <!-- Permissions Form -->
+            <form method="post" th:action="@{/oauth2/authorize}" class="space-y-5">
                 <input type="hidden" name="client_id" th:value="${clientId}">
                 <input type="hidden" name="state" th:value="${state}">
 
-                <div th:each="scope: ${scopes}" class="form-group form-check py-1">
-                    <input class="form-check-input"
+                <div th:each="scope: ${scopes}" class="flex items-start gap-3 p-3 rounded-xl transition-all duration-300 bg-gray-50 hover:bg-gray-100 dark:bg-gray-700/50 dark:hover:bg-gray-700">
+                    <input class="mt-1 h-5 w-5 text-blue-600 rounded focus:ring-blue-500 dark:focus:ring-blue-400"
                            type="checkbox"
                            name="scope"
                            th:value="${scope.scope}"
                            th:id="${scope.scope}"
                            checked>
-                    <label class="form-check-label font-weight-bold" th:for="${scope.scope}" th:text="${scope.scope}"></label>
-                    <p class="text-primary" th:text="${scope.description}"></p>
+                    <div class="flex-1">
+                        <label class="font-medium text-gray-900 dark:text-white" th:for="${scope.scope}" th:text="${scope.scope}"></label>
+                        <p class="text-gray-600 text-sm dark:text-gray-400" th:text="${scope.description}"></p>
+                    </div>
                 </div>
 
-                <p th:if="${not #lists.isEmpty(previouslyApprovedScopes)}">You have already granted the following permissions to the above app:</p>
-                <div th:each="scope: ${previouslyApprovedScopes}" class="form-group form-check py-1">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           th:id="${scope.scope}"
-                           disabled
-                           checked>
-                    <label class="form-check-label font-weight-bold" th:for="${scope.scope}" th:text="${scope.scope}"></label>
-                    <p class="text-primary" th:text="${scope.description}"></p>
-                </div>
-
-                <div class="form-group pt-3">
-                    <button class="btn btn-primary btn-lg" type="submit" name="consent_action" value="approve">
-                        Submit Consent
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                    <button type="submit" name="consent_action" value="approve"
+                            class="btn-primary flex-1 py-3.5 bg-gradient-to-br from-blue-500 to-blue-800 text-white rounded-xl font-semibold text-base cursor-pointer transition-all duration-300 hover:from-blue-600 hover:to-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-500/30 transform hover:-translate-y-0.5 focus:-translate-y-0.5">
+                        Authorize
                     </button>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-link regular" type="submit" name="consent_action" value="cancel">
+                    <button type="submit" name="consent_action" value="cancel"
+                            class="btn-secondary flex-1 py-3.5 bg-gray-100 text-gray-700 rounded-xl font-semibold text-base cursor-pointer transition-all duration-300 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-gray-300/30 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transform hover:-translate-y-0.5 focus:-translate-y-0.5">
                         Cancel
                     </button>
                 </div>
             </form>
+
+            <!-- Consent Info -->
+            <div class="consent-info bg-gray-50 rounded-xl p-4 text-center mt-6 dark:bg-gray-700/50">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Your consent is required. No information will be shared with the application unless you approve.
+                </p>
+            </div>
         </div>
     </div>
-    <div class="row pt-4">
-        <div class="col text-center">
-            <p>
-                <small>
-                    Your consent to provide access is required.
-                    <br/>If you do not approve, click Cancel, in which case no information will be shared with the app.
-                </small>
-            </p>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-600 text-sm mt-10 border-t border-gray-200 dark:text-gray-400 dark:border-gray-600">
+        <p>By authorizing this application, you agree to our <a href="#" class="text-blue-500 hover:underline transition-colors">Terms of Service</a> and
+            <a href="#" class="text-blue-500 hover:underline transition-colors">Privacy Policy</a>.</p>
+        <div class="footer-links flex justify-center gap-5 mt-2.5">
+            <a href="#" class="text-gray-600 hover:text-blue-500 hover:underline transition-colors dark:text-gray-400">Help Center</a>
+            <a href="#" class="text-gray-600 hover:text-blue-500 hover:underline transition-colors dark:text-gray-400">Status</a>
+            <a href="#" class="text-gray-600 hover:text-blue-500 hover:underline transition-colors dark:text-gray-400">Blog</a>
         </div>
-    </div>
+        <p class="mt-4">© 2025 C-Cloud. All rights reserved.</p>
+    </footer>
 </div>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle fixed bottom-8 right-8 w-12 h-12 rounded-full bg-white text-gray-600 shadow-lg flex items-center justify-center cursor-pointer border-none text-lg transition-all duration-300 hover:rotate-12 hover:shadow-xl dark:bg-gray-800 dark:text-white dark:shadow-2xl z-50">
+    <i class="fas fa-palette"></i>
+</button>
+
+<script th:src="@{/js/theme.js}"></script>
 </body>
 </html>

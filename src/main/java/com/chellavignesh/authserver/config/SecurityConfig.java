@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .with(authorizationServerConfigurer, authorizationServer ->
                         authorizationServer
                                 .oidc(Customizer.withDefaults())    // Enable OpenID Connect 1.0
+                                .authorizationEndpoint(endpoint -> endpoint.consentPage("/oauth2/consent"))
                 )
                 .authorizeHttpRequests(authorize ->
                         authorize
